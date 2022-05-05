@@ -4,8 +4,9 @@ import ssl
 import socket
 import base64
 import random
+import src.*
 from EliteBotConfig import *
- 
+
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 
 if str(BPORT)[:1] == '+':
