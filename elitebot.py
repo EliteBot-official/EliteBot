@@ -23,11 +23,16 @@ def SendIRC(msg):
 def SendMsg(msg, target=BHOME):
     SendIRC("PRIVMSG "+ target +" :"+ msg)
     
-print(f'Connecting to {BSERVER} :{BPORT}')
-ircsock.connect_ex((BSERVER, BPORT))
-if UseSASL:
-   SendIRC('CAP REQ :sasl')
-
+def connect(): 
+   print(f'Connecting to {BSERVER} :{BPORT}')
+   ircsock.connect_ex((BSERVER, BPORT))
+   if UseSASL:
+      SendIRC('CAP REQ :sasl')
+   if USPASS:
+      SendIRC(f'PASS {SPASS}')
+   SendIRC(f'NICK {BNICK}')
+   SendIRC(f'USER {BIDENT} * * :{BNAME}')
+   
 def decode(bytes):
     try: text = bytes.decode('utf-8')
     except UnicodeDecodeError:
@@ -37,9 +42,6 @@ def decode(bytes):
             except UnicodeDecodeError:
                 text = bytes.decode('cp1252')			
     return text
- 
-SendIRC(f'NICK {BNICK}')
-SendIRC(f'USER {BIDENT} * * :{BNAME}')
 
 while True:
     recvText = ircsock.recv(2048)
