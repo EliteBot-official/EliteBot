@@ -1,12 +1,28 @@
 #!/usr/bin/python3
 
+# Bot Settings
+BNICK   = 'EliteBot'
+BIDENT  = 'EliteBot'
+BNAME   = 'EliteBot'
+BALT    = 'EliteBot-'
+
+BHOME   = '#EliteBot'
+BADMIN  = 'ComputerTech'
+
+# Connection Settings
+BPORT   =  '+6697'
+BSERVER = 'irc.rizon.net'
+
+# SASL Configuration.
+UseSASL = True
+SANICK  = 'EliteBot'
+SAPASS  = 'password'
+
 import ssl
 import socket
 import base64
 import random
-import src.*
-from EliteBotConfig import *
-
+ 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 
 if str(BPORT)[:1] == '+':
@@ -24,16 +40,11 @@ def SendIRC(msg):
 def SendMsg(msg, target=BHOME):
     SendIRC("PRIVMSG "+ target +" :"+ msg)
     
-def connect(): 
-   print(f'Connecting to {BSERVER} :{BPORT}')
-   ircsock.connect_ex((BSERVER, BPORT))
-   if UseSASL:
-      SendIRC('CAP REQ :sasl')
-   if USPASS:
-      SendIRC(f'PASS {SPASS}')
-   SendIRC(f'NICK {BNICK}')
-   SendIRC(f'USER {BIDENT} * * :{BNAME}')
-   
+print(f'Connecting to {BSERVER} :{BPORT}')
+ircsock.connect_ex((BSERVER, BPORT))
+if UseSASL:
+   SendIRC('CAP REQ :sasl')
+
 def decode(bytes):
     try: text = bytes.decode('utf-8')
     except UnicodeDecodeError:
@@ -43,13 +54,17 @@ def decode(bytes):
             except UnicodeDecodeError:
                 text = bytes.decode('cp1252')			
     return text
+ 
+SendIRC(f'NICK {BNICK}')
+SendIRC(f'USER {BIDENT} * * :{BNAME}')
 
 while True:
     recvText = ircsock.recv(2048)
     ircmsg = decode(recvText)
     line = ircmsg.strip('\n\r')
-    linx = line.replace(':','')
-    print(linx)
+    line = line.replace(':','',2)
+    line = line.replace('!',' ',1)
+    print(line)
 
     if ircmsg.find(f' 001 {BNICK} :') != -1:
        SendIRC(f'JOIN {BHOME}')
