@@ -11,7 +11,7 @@ BADMIN  = 'ComputerTech'
 
 # Connection Settings
 BPORT   =  '+6697'
-BSERVER = 'irc.rizon.net'
+BSERVER = 'irc.address.org'
 
 # SASL Configuration.
 UseSASL = True
