@@ -11,12 +11,14 @@ BADMIN  = 'ComputerTech'
 
 # Connection Settings
 BPORT   =  '+6697'
-BSERVER = 'irc.address.org'
+BSERVER = 'irc.technet.chat'
 
 # SASL Configuration.
-UseSASL = True
+UseSASL = False
 SANICK  = 'EliteBot'
 SAPASS  = 'password'
+
+#!/usr/bin/python3
 
 import ssl
 import socket
@@ -62,9 +64,8 @@ while True:
     recvText = ircsock.recv(2048)
     ircmsg = decode(recvText)
     line = ircmsg.strip('\n\r')
-    line = line.replace(':','',2)
-    line = line.replace('!',' ',1)
-    print(line)
+    linx = line.replace(':','')
+    print(linx)
 
     if ircmsg.find(f' 001 {BNICK} :') != -1:
        SendIRC(f'JOIN {BHOME}')
@@ -72,6 +73,7 @@ while True:
     elif ircmsg.find('PING') != -1:
         pongis = ircmsg.split(' ', 1)[1] 
         SendIRC(f'PONG {pongis}')
+        print(f'PONG {pongis}')
         
     elif ircmsg.find(f' 433 * {BNICK} :') != -1:
         BNICK = f'{BNICK}{str(random.randint(10000,99999))}'
